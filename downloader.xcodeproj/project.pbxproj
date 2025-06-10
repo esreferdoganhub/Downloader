@@ -111,8 +111,6 @@
 				4C05D7322DC539DC00FDF884 /* downloader */,
 			);
 			name = downloader;
-			packageProductDependencies = (
-			);
 			productName = downloader;
 			productReference = 4C05D7302DC539DC00FDF884 /* downloader.app */;
 			productType = "com.apple.product-type.application";
@@ -134,8 +132,6 @@
 				4C05D7492DC539DE00FDF884 /* downloaderTests */,
 			);
 			name = downloaderTests;
-			packageProductDependencies = (
-			);
 			productName = downloaderTests;
 			productReference = 4C05D7462DC539DE00FDF884 /* downloaderTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -157,8 +153,6 @@
 				4C05D7532DC539DE00FDF884 /* downloaderUITests */,
 			);
 			name = downloaderUITests;
-			packageProductDependencies = (
-			);
 			productName = downloaderUITests;
 			productReference = 4C05D7502DC539DE00FDF884 /* downloaderUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -398,9 +392,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"downloader/Preview Content\"";
 				DEVELOPMENT_TEAM = 7X79CTG4SR;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSDocumentsFolderUsageDescription = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -425,9 +421,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"downloader/Preview Content\"";
 				DEVELOPMENT_TEAM = 7X79CTG4SR;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSDocumentsFolderUsageDescription = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
