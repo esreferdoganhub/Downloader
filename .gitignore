@@ -1,0 +1,17 @@
+# OS X
+.DS_Store
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+project.xcworkspace/xcuserdata/
+*.xcuserdata
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+# Temporary files
+*.tmp
+*.log
+*.xcarchive

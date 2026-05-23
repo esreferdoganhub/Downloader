@@ -33,6 +33,7 @@ struct ContentView: View {
     @AppStorage("downloadPlaylist") var downloadPlaylist = false
     @AppStorage("selectedResolution") var storedResolution: Int = 0
     @AppStorage("downloadDirectoryPath") var downloadDirectoryPath: String = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first!.path
+    @AppStorage("selectedBrowser") var selectedBrowser: String = "none"
     // Harici indirici (aria2c) her zaman kullanılsın
     let useExternalDownloader = true
 
@@ -191,6 +192,33 @@ struct ContentView: View {
                     }
                     .toggleStyle(.switch)
                     .padding(.vertical, 10)
+
+                    // Çerez Seçici (Bot Korumasını Aşmak İçin)
+                    HStack(spacing: 10) {
+                        Image(systemName: "lock.shield")
+                            .foregroundColor(.orange)
+                        Text("Bot Koruması (Çerez):")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Picker("", selection: $selectedBrowser) {
+                            Text("Kullanma").tag("none")
+                            Text("Safari").tag("safari")
+                            Text("Chrome").tag("chrome")
+                            Text("Firefox").tag("firefox")
+                            Text("Brave").tag("brave")
+                            Text("Edge").tag("edge")
+                            Text("Opera").tag("opera")
+                        }
+                        .pickerStyle(.menu)
+                        .frame(width: 120)
+                    }
+                    .padding(10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(colorScheme == .dark ? Color.black : Color.white.opacity(0.85))
+                            .shadow(color: Color.black.opacity(0.04), radius: 2, x: 0, y: 1)
+                    )
 
                     // İndirme klasörü seçimi ve açma
                     HStack(spacing: 10) {
@@ -386,9 +414,10 @@ struct ContentView: View {
             }
             var outputLog = ""
             
+            let cookiesArg = selectedBrowser != "none" ? "--cookies-from-browser \(selectedBrowser)" : ""
             let proc = Process(); let pipe = Pipe()
             proc.executableURL = URL(fileURLWithPath: "/bin/zsh")
-            proc.arguments = ["-c", "\"\(yt)\" -F \"\(videoURL)\""]
+            proc.arguments = ["-c", "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"; \"\(yt)\" -v \(cookiesArg) -F \"\(videoURL)\""]
             proc.standardOutput = pipe; proc.standardError = pipe
             pipe.fileHandleForReading.readabilityHandler = { handle in
                 let data = handle.availableData
@@ -439,6 +468,9 @@ struct ContentView: View {
                 fmt = "bestvideo[height<=\(storedResolution)] + bestaudio/best"
             }
             var args = ["\"\(yt)\"", noPl]
+            if selectedBrowser != "none" {
+                args.append("--cookies-from-browser \(selectedBrowser)")
+            }
             if let aria = ar {
                 args.append("--external-downloader \"\(aria)\"")
                 args.append("--external-downloader-args '-x16 -s16 -k1M'")
@@ -453,7 +485,7 @@ struct ContentView: View {
             ]
             
             args += ["-f \"\(fmt)\"", "--ffmpeg-location \"\(ff)\"", "--merge-output-format mp4"] + compatibilityArgs + ["-o \"\(downloadDirectoryPath)/\(outName)\"", "\"\(videoURL)\""]
-            let cmd = args.filter { !$0.isEmpty }.joined(separator: " ")
+            let cmd = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"; " + args.filter { !$0.isEmpty }.joined(separator: " ")
 
             let proc = Process(); proc.executableURL = URL(fileURLWithPath: "/bin/zsh"); proc.arguments = ["-c", cmd]
             let pipe = Pipe(); proc.standardOutput = pipe; proc.standardError = pipe
@@ -500,7 +532,7 @@ struct ContentView: View {
                         let tempPath = dir + "/" + temp
                         let mp3Path = tempPath.replacingOccurrences(of: "_temp.mp4", with: ".mp3").replacingOccurrences(of: "_temp.mkv", with: ".mp3")
                         // ffmpeg komutu - iTunes/QuickTime uyumlu MP3
-                        let ffmpegCmd = "\(ff) -i \"\(tempPath)\" -vn -codec:a libmp3lame -b:a 192k -ar 44100 -ac 2 -metadata:s:a:0 language=eng -y \"\(mp3Path)\""
+                        let ffmpegCmd = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"; \(ff) -i \"\(tempPath)\" -vn -codec:a libmp3lame -b:a 192k -ar 44100 -ac 2 -metadata:s:a:0 language=eng -y \"\(mp3Path)\""
                         let ffProc = Process(); ffProc.executableURL = URL(fileURLWithPath: "/bin/zsh"); ffProc.arguments = ["-c", ffmpegCmd]
                         let ffPipe = Pipe(); ffProc.standardOutput = ffPipe; ffProc.standardError = ffPipe
                         do {
