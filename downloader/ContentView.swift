@@ -480,7 +480,7 @@ struct ContentView: View {
             
             // QuickTime Player uyumluluğu için ek parametreler
             let compatibilityArgs = [
-                "--postprocessor-args", "\"ffmpeg:-c:v libx264 -c:a aac -movflags +faststart\"",
+                "--postprocessor-args", "\"ffmpeg:-c:v h264_videotoolbox -c:a aac -movflags +faststart\"",
                 "--embed-subs", "--write-auto-sub"
             ]
             
